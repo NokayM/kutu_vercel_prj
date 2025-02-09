@@ -1,0 +1,171 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Genel Stil Ayarları */
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background-color: #f9f9f9; 
+    margin: 0; 
+    padding: 20px; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: flex-start; 
+    align-items: center; 
+    min-height: 100vh; 
+}
+  
+.container { 
+    background-color: #ffffff; 
+    padding: 30px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+    max-width: 1100px; 
+    width: 100%; 
+    margin-top: 10px; 
+}
+  
+h1 { 
+    text-align: center; 
+    color: #333; 
+    margin-bottom: 10px; 
+}
+  
+.input-group { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    width: 100%;
+    margin-bottom: 15px;
+}
+  
+.input-group input { 
+    width: 100%; 
+    padding: 15px; 
+    border: 1px solid #ddd; 
+    border-radius: 8px; 
+    font-size: 18px; 
+    text-align: center; 
+}
+  
+.input-group button { 
+    padding: 12px 30px; 
+    background-color: #1e1e1e; 
+    color: white; 
+    border: none; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-size: 16px; 
+    margin-top: 15px; 
+    width: auto;
+}
+  
+#sonuc { 
+    background-color: #f4f4f4; 
+    padding: 20px; 
+    border-radius: 8px; 
+    overflow-y: auto; 
+    margin-top: 20px; 
+}
+
+/* Öneri Kartları Stili */
+.oneri-grid { 
+    display: flex; 
+    gap: 15px; 
+    margin-bottom: 20px; 
+    padding-bottom: 10px; 
+    position: relative; 
+    scroll-behavior: smooth; 
+}
+
+.oneri-card { 
+    background: #fff; 
+    border: 1px solid #ddd; 
+    border-radius: 8px; 
+    padding: 10px; 
+    text-align: center; 
+    height: auto; 
+    min-width: 250px;
+    flex: 0 0 auto; 
+}
+  
+.oneri-card img { 
+    max-width: 100%; 
+    height: 280px; 
+    object-fit: contain; 
+    border-radius: 8px; 
+}
+  
+.oneri-card p { 
+    margin: 5px 0; 
+    font-size: 14px; 
+}
+  
+.oneri-card a { 
+    display: block; 
+    margin-top: 10px; 
+    color: #1e1e1e; 
+    text-decoration: none; 
+    font-weight: bold; 
+}
+  
+.oneri-card a:hover { 
+    text-decoration: underline; 
+}
+
+.oneri-card.exact-match {
+    border: 2px solid green;
+    background-color: #f0fff0;
+}
+
+/* 📌 Masaüstünde Maksimum 3 Ürün */
+@media (min-width: 1024px) {
+    .oneri-grid {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .oneri-card {
+        width: calc(33.33% - 20px);
+        min-width: 280px;
+    }
+}
+
+/* 📌 Tablet için 3 Ürün Yan Yana */
+@media (max-width: 1024px) {
+    .oneri-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .oneri-card {
+        width: calc(30% - 15px);
+        min-width: 200px;
+    }
+}
+
+/* 📌 Mobilde Slider */
+@media (max-width: 768px) {
+    .oneri-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 10px;
+        padding-bottom: 10px;
+    }
+
+    .oneri-card {
+        flex: 0 0 auto;
+        width: 80%;
+        min-width: 150px;
+        scroll-snap-align: start;
+    }
+
+    .oneri-grid::after {
+        content: "";
+        flex: 0 0 20px;
+    }
+}
