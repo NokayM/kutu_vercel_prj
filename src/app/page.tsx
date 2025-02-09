@@ -2,11 +2,19 @@
 import { useState } from "react";
 import Slider from "./components/Slider";
 
+// Ürün tipi tanımlaması
+interface Urun {
+  Url: string;
+  Title: string;
+  Price: string;
+  İmage: string;
+}
+
 export default function Home() {
-    const [olcu, setOlcu] = useState("");
-    const [oneriler, setOneriler] = useState<any[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [sonucMesaji, setSonucMesaji] = useState("Lütfen ölçüleri girin ve 'Öneri Al' butonuna tıklayın.");
+    const [olcu, setOlcu] = useState<string>(""); // string tipi belirtiliyor
+    const [oneriler, setOneriler] = useState<Urun[]>([]); // Urun tipi ile dizi tanımlandı
+    const [loading, setLoading] = useState<boolean>(false);
+    const [sonucMesaji, setSonucMesaji] = useState<string>("Lütfen ölçüleri girin ve 'Öneri Al' butonuna tıklayın.");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
