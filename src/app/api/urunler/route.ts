@@ -11,6 +11,16 @@ interface Urun {
     olculer: number[] | null;
 }
 
+// JSON dosyasından okunan verinin yapısı
+interface JsonData {
+    data: {
+        Url: string;
+        Title: string;
+        Price: string;
+        İmage: string;
+    }[];
+}
+
 // Ölçüleri çıkaran fonksiyon
 function extractDimensions(text: string): number[] | null {
     const pattern = /(\d+(\.\d+)?)\s*x\s*(\d+(\.\d+)?)\s*x\s*(\d+(\.\d+)?)/;
@@ -44,20 +54,20 @@ export async function GET(req: Request) {
         // Veriyi public klasöründen oku
         const filePath = join(process.cwd(), "public/data/olculer.json");
         const fileContents = readFileSync(filePath, "utf-8");
-        const data = JSON.parse(fileContents);
+        const data: JsonData = JSON.parse(fileContents);
 
         // Ölçüleri parse et ve mesafeye göre sırala
         const urunler: Urun[] = data.data
-            .map((urun: any) => ({
+            .map((urun) => ({
                 ...urun,
                 olculer: extractDimensions(urun.Title),
             }))
-            .filter((urun: Urun) => urun.olculer !== null) // Geçersiz ölçüleri filtrele
-            .map((urun: Urun) => ({
+            .filter((urun): urun is Urun & { olculer: number[] } => urun.olculer !== null) // Geçersiz ölçüleri filtrele
+            .map((urun) => ({
                 ...urun,
-                similarity: olculeriKarsilastir(istenenOlcu, urun.olculer as number[]),
+                similarity: olculeriKarsilastir(istenenOlcu, urun.olculer),
             }))
-            .sort((a: Urun, b: Urun) => a.similarity - b.similarity) // En yakınları sırala
+            .sort((a, b) => a.similarity - b.similarity) // En yakınları sırala
             .slice(0, 3); // İlk 3 ürünü al
 
         return NextResponse.json({ urunler });
