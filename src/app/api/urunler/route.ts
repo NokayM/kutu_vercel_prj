@@ -2,6 +2,15 @@ import { NextResponse } from "next/server";
 import { readFileSync } from "fs";
 import { join } from "path";
 
+// Ürün tipi tanımlaması
+interface Urun {
+    Url: string;
+    Title: string;
+    Price: string;
+    İmage: string;
+    olculer: number[] | null;
+}
+
 // Ölçüleri çıkaran fonksiyon
 function extractDimensions(text: string): number[] | null {
     const pattern = /(\d+(\.\d+)?)\s*x\s*(\d+(\.\d+)?)\s*x\s*(\d+(\.\d+)?)/;
@@ -22,7 +31,7 @@ export async function GET(req: Request) {
     try {
         const url = new URL(req.url);
         const olcuInput = url.searchParams.get("olcu");
-        
+
         if (!olcuInput) {
             return NextResponse.json({ error: "Geçersiz ölçü formatı" }, { status: 400 });
         }
@@ -32,22 +41,23 @@ export async function GET(req: Request) {
             return NextResponse.json({ error: "Ölçüleri uygun formatta girin! Örn: 12x12x13 cm" }, { status: 400 });
         }
 
+        // Veriyi public klasöründen oku
         const filePath = join(process.cwd(), "public/data/olculer.json");
         const fileContents = readFileSync(filePath, "utf-8");
         const data = JSON.parse(fileContents);
 
         // Ölçüleri parse et ve mesafeye göre sırala
-        const urunler = data.data
+        const urunler: Urun[] = data.data
             .map((urun: any) => ({
                 ...urun,
                 olculer: extractDimensions(urun.Title),
             }))
-            .filter((urun: any) => urun.olculer !== null) // Geçersiz ölçüleri filtrele
-            .map((urun: any) => ({
+            .filter((urun: Urun) => urun.olculer !== null) // Geçersiz ölçüleri filtrele
+            .map((urun: Urun) => ({
                 ...urun,
                 similarity: olculeriKarsilastir(istenenOlcu, urun.olculer as number[]),
             }))
-            .sort((a: any, b: any) => a.similarity - b.similarity) // En yakınları sırala
+            .sort((a: Urun, b: Urun) => a.similarity - b.similarity) // En yakınları sırala
             .slice(0, 3); // İlk 3 ürünü al
 
         return NextResponse.json({ urunler });

@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import Slider from "./components/Slider";
 
 // Ürün tipi tanımlaması
 interface Urun {
@@ -61,11 +60,20 @@ export default function Home() {
                 </div>
             </form>
 
-            {/* Eğer öneriler varsa Slider'ı göster */}
+            {/* Eğer öneriler varsa önerileri listele */}
             {oneriler.length > 0 ? (
                 <>
                     <h3>En Yakın Ölçülerdeki Ürünler:</h3>
-                    <Slider oneriler={oneriler} />
+                    <ul>
+                        {oneriler.map((urun, index) => (
+                            <li key={index}>
+                                <img src={urun.İmage} alt={urun.Title} />
+                                <h4>{urun.Title}</h4>
+                                <p>{urun.Price}</p>
+                                <a href={urun.Url} target="_blank" rel="noopener noreferrer">Ürün Sayfasına Git</a>
+                            </li>
+                        ))}
+                    </ul>
                 </>
             ) : (
                 <p>{sonucMesaji}</p>
